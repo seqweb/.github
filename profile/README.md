@@ -4,7 +4,7 @@ This terse framing analogy can be useful for "quadrangulating" on the goals and 
 
 All four components of the analogy are web resources addressible via Internet domains: `seqweb.org`, `oeis.org`, `dbpedia.org` and `wikipedia.org` respectively.
 
-These four web entities can be organized natually along two axes: _subject focus_ and _content type_. 
+These four web entities can be organized naturally along two axes: _subject focus_ and _content type_. 
 
 - The _subject focus_ of both Wikipedia and DBpedia is general information, while for both the OEIS and SeqWeb it is the specialized area of mathematical integer sequences.
 
@@ -87,13 +87,52 @@ Development and delivery for SeqWeb are also supported by Github repos, under th
 
 [Note: currently, during initial development, SeqWeb's formal ontologies and related collateral (such as vocabularies, modeling guides, etc) are assigned to the `seqwebcode/ontology/` folder -- however we may want to revisit this and migrate them into `seqwebdata` instead]
 
-#### Benefits to the OEIS from SeqWeb
+#### Possible Benefits to the OEIS from SeqWeb
 While it's impossible to predict what innovative uses for the OEIS's trove of knowledge SeqWeb will inspire, interesting outcomes can be anticipated in a few areas:
 
-**Rigor** 
+**Rigor** SeqWeb and the semantic web modeling disciplines can provide an additional level of precision to that already enjoyed by the OEIS as a mathemetical reference.  While not quite at the level of, say, a proof checker, practices such as registering definitions of terms being used in vocabularies and specifying their relationships using formal ontologies will tend to raise overall quality.  For example it can help ameliorate ambiguities like whether a certain string token refers to a mathematical function, its approximate implementation in a particular programming language, or something else.
 
-**AI**
+Even relatively banal statements can be made more precise and usable.  For example a sequence with a definition including text like "...primes such that..." can be expressed precisely:
+```
+    oeis:A000668    seq:subsetOf    oeis:A000040 .
+```
 
-**Extensions**
+**AI**  In a related vein, SeqWeb may be used to help control LLMs and turn them, in the OEIS context, from unreliable slop generators toward greater utility -- for example they could be part of a natural language query interface to the OEIS, implemented using the "Graph-RAG" pattern.
 
-**Federation**
+**Extensions**  Perenially, users of the OEIS come up with intersting ideas for possible features, motivated by specialized interests and use cases.  Typical examples are proposals for new keywords, perhaps accompanied by ideas like parameterizing them.  Sadly these enthusiasms usually have to be squelched, since disrupting the curent underlying legacy data model would be taxing, and the consequent maintenance burden unsupportable.
+
+SeqWeb can provide a constructive alternative avenue for these worthy proposals.  Since a knowledge graph can host an unbounded number of new assertions, and triple subgraphs provide a fully flexible yet highly structured construction medium, users can design accretive extensions without disrupting pre-existing OEIS schemas.
+
+**Federation**  Moreover, unlike traditonal information, knowledge graphs need not be confined to single datastores.  Since triples are built entirely from URLs (IRIs actually) they can, and do, reference resources that can be anywhere on the World Wide Web.  The SPARQL query language include features that cause endpoints on external hosts to be seamlessly queryable as though they were simply subgraphs.  For example a single query expression might find all sequences authored by someone's doctoral students, who would be obtained from DBpedia.
+Here's a simplfied example showing a federated query issued to my local SPARQL endpoint that looks up a DBpedia entry:
+```
+SELECT ?person ?name WHERE {
+  SERVICE <http://dbpedia.org/sparql> {
+    ?person a foaf:Person .
+    ?person rdfs:label ?name .
+    FILTER (LANG(?name) = "en" && regex(?name, "Neil", "i") && regex(?name, "Sloane", "i")) .
+  } 
+} 
+```
+This returns
+```
+<http://dbpedia.org/resource/Neil_Sloane>   "Neil Sloane"@en
+```
+
+This means in particular that extensions can be entirely implemented and hosted by others.  For example a set of specialized relationships between sequences could be identified by an academic researcher, embodied as a knowledge graph maintiained at their home institution, and made fully available via federation with SeqWeb.
+
+**Frontier Mathematics** SeqWeb will enable and encourage new sorts of explorations.  For example sequence "transforms" are a longstanding concept in the OEIS.  But today the only way to express these relationships is with natural language text commentary like "a(n) is the Mobius transform of the primes."  In SeqWeb this could be modeled concretely as a triple like
+```
+    oeis:A007444    seq:möbiusTransformOf   oeis:A000040 .
+```
+
+with the SeqWeb ontology containing definitions like
+```
+    seq:möbiusTransformOf   rdf:type        seq:Transform ;
+                            seq:definition  oeis:wiki/Möbius_transform ;
+                            rdfs:domain     seq:Sequence ;
+                            rdfs:range      seq:Sequence ;
+                            owl:inverseOf   seq:hasMöbiusTransform ;
+                            ... .
+```
+One could imagine a project that systematically walks through all the sequences, applying Superseeker transforms, and making the appropriate assertions into the SeqWeg graph whenever it gets a hit.
