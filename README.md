@@ -1,14 +1,12 @@
 # .github
-SeqWeb is to the OEIS as DBpedia is to Wikipedia.
-See https://github.com/seqweb/.github/profile/README.md for further info 
+## ***SeqWeb*** _is to the_ **OEIS** _as_ **DBpedia** _is to_ **Wikipedia**.
 
-<!--
+Project level documentation may be found at the [SeqWeb Wiki](https://github.com/seqweb/seqweb/wiki)
 
-**Here are some ideas to get you started:**
+- SeqWeb extends the OEIS, one of the world's largest mathematical knowledge bases, with an independent, open,  knowledge graph resource.
 
-🙋‍♀️ A short introduction - what is your organization all about?
-🌈 Contribution guidelines - how can the community get involved?
-👩‍💻 Useful resources - where can the community find your docs? Is there anything else the community should know?
-🍿 Fun facts - what does your team eat for breakfast?
-🧙 Remember, you can do mighty things with the power of [Markdown](https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
--->
+- SeqWeb's mission is to further empower and amplify the discovery and development of this knowledge.
+
+- SeqWeb is in active development with core infrastructure, architecture and ontology design and implementation underway.
+
+- SeqWeb is seeking interested potential early collaborators, academic partners, and supporters.
